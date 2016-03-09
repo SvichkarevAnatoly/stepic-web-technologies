@@ -15,18 +15,17 @@ class EchoServer(asyncore.dispatcher):
         if pair is not None:
             sock, addr = pair
             print 'Incoming connection from %s' % repr(addr)
-            handler = EchoHandler(sock)
+            EchoHandler(sock)
 
 
 class EchoHandler(asyncore.dispatcher_with_send):
     def handle_read(self):
         data = self.recv(1024)
-        if data:
-            if data == 'close':
-                self.close()
-            else:
-                print(data)
-                self.send(data)
+        if 'close' in data:
+            self.close()
+        else:
+            print(data)  # print received data
+            self.send(data)  # sent to client
 
 
 if __name__ == "__main__":
